@@ -1,0 +1,54 @@
+{
+  "name": "@buzzbrothers/datocms-plugin-buzz-text-styles",
+  "description": "This plugin allows you to define and apply custom text styles to your DatoCMS content fields, enhancing the visual consistency and branding of your content.",
+  "homepage": "https://github.com/BuzzBrothers-agency/datocms-plugin-buzz-text-styles",
+  "version": "0.0.1",
+  "author": "Buzzbrothers <tech@buzzbrothers.ch> (https://buzzbrothers.ch)",
+  "type": "module",
+  "keywords": [
+    "datocms-plugin",
+    "datocms",
+    "buzzbrothers",
+    "text",
+    "styles",
+    "structured text"
+  ],
+  "datoCmsPlugin": {
+    "title": "Buzz Text Styles",
+    "coverImage": "docs/datocms-plugin-buzz-text-styles-cover.png",
+    "previewImage": "docs/datocms-plugin-buzz-text-styles-preview.mp4",
+    "entryPoint": "dist/index.html",
+    "permissions": [
+      "currentUserAccessToken"
+    ]
+  },
+  "files": [
+    "dist",
+    "docs"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "publish": "npm publish --access public",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@datocms/cma-client-browser": "^3.3.15",
+    "@blackbyte/sugar": "^1.0.0-beta.4",
+    "datocms-plugin-sdk": "^2.0.0",
+    "datocms-react-ui": "^2.0.15",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "prettier": "^3.6.2",
+    "prettier-plugin-css-order": "^2.1.2",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "globals": "^15.9.0",
+    "typescript": "^5.5.3",
+    "vite": "^5.4.1"
+  }
+}

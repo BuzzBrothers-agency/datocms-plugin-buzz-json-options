@@ -1,18 +1,19 @@
 // @ts-nocheck
 import { Canvas, FieldGroup, TextareaField } from 'datocms-react-ui'
 import { useState } from 'react'
+import { TDatoPluginBuzzOptionsConfig } from '../../options.type'
 import './config.css'
-import { type TConfig } from './config.type'
 
 let updateTimeout
 
 export default function Config({ ctx }) {
-  const parameters = (ctx.plugin.attributes.parameters ?? {}) as TConfig
-  const [textStyles, setTextStyles] = useState(parameters.textStyles ?? [])
-  const [fieldsInWhichAllowCustomStyles, setFieldsInWhichAllowCustomStyles] =
-    useState(parameters.fieldsInWhichAllowCustomStyles ?? [])
+  const parameters = (ctx.plugin.attributes.parameters ??
+    {}) as TDatoPluginBuzzOptionsConfig
+  const [options, setOptions] = useState(parameters.options ?? {})
 
-  function updateParameters(newParameters: Partial<TConfig>): void {
+  function updateParameters(
+    newParameters: Partial<TDatoPluginBuzzOptionsConfig>
+  ): void {
     clearTimeout(updateTimeout)
     updateTimeout = setTimeout(() => {
       ctx.updatePluginParameters({
@@ -27,24 +28,25 @@ export default function Config({ ctx }) {
     <Canvas ctx={ctx}>
       <div className="config">
         <FieldGroup>
-          <h2 className="typo-h3">Text styles</h2>
+          <h2 className="typo-h3">Options</h2>
           <p className="typo-p">
-            Text styles are available in the{' '}
+            Define some options that you will then be able to extend in each of
+            your JSON fields .<br />
+            Check out the{' '}
             <a
               className="typo-a"
-              href="https://www.datocms.com/docs/plugin-sdk/structured-text-customizations"
+              href="https://github.com/BuzzBrothers-agency/datocms-plugin-buzz-options"
               target="_blank"
             >
-              structured text
+              documentation
             </a>{' '}
-            dato field. You can specify additional styles here following the
-            JSON structure defined in the dato documentation.
+            for more details.
           </p>
           <TextareaField
-            name="textStyles"
-            id="textStyles"
-            hint="Define the text styles you want to be available in the editor."
-            value={JSON.stringify(textStyles, null, 2)}
+            name="options"
+            id="options"
+            hint="Define some options that will be available to extend in your JSON fields."
+            value={JSON.stringify(options, null, 2)}
             textareaInputProps={{
               rows: 15,
               monospaced: true
@@ -57,39 +59,12 @@ export default function Config({ ctx }) {
                 return
               }
 
-              setTextStyles(newValue)
+              setOptions(newValue)
               updateParameters({
-                textStyles: newValue
+                options: newValue
               })
             }}
           />
-          {/* <p>
-            Specify in which field you want them to appear by adding api_key
-            field value
-          </p>
-          <TextareaField
-            name="fieldsInWhichAllowCustomStyles"
-            id="fieldsInWhichAllowCustomStyles"
-            hint="Define in which field you want the custom styles appears."
-            value={JSON.stringify(fieldsInWhichAllowCustomStyles, null, 2)}
-            textareaInputProps={{
-              rows: 15,
-              monospaced: true
-            }}
-            onChange={(newValue) => {
-              try {
-                newValue = JSON.parse(newValue)
-              } catch (e) {
-                ctx.alert('The JSON you provided is invalid')
-                return
-              }
-
-              setFieldsInWhichAllowCustomStyles(newValue)
-              updateParameters({
-                fieldsInWhichAllowCustomStyles: newValue
-              })
-            }}
-          /> */}
         </FieldGroup>
       </div>
     </Canvas>

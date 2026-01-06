@@ -15,7 +15,7 @@
     "json"
   ],
   "datoCmsPlugin": {
-    "title": "Buzz Options",
+    "title": "Buzz JSON Options",
     "coverImage": "docs/datocms-plugin-buzz-json-options-cover.png",
     "previewImage": "docs/datocms-plugin-buzz-json-options-preview.mp4",
     "entryPoint": "dist/index.html",

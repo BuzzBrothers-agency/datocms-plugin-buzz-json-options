@@ -109,8 +109,8 @@ export default function OptionsField({ ctx }) {
   // set default values for options that are not set yet
   const setDefaults = () => {
     const newOptions = { ...options }
-    if (fieldConfig.props) {
-      Object.entries(fieldConfig.props).forEach(([propId, prop]) => {
+    if (finalFieldConfig.props) {
+      Object.entries(finalFieldConfig.props).forEach(([propId, prop]) => {
         if (newOptions[propId] === undefined && prop.default !== undefined) {
           newOptions[propId] = prop.default
         }
@@ -197,19 +197,19 @@ export default function OptionsField({ ctx }) {
   return (
     <Canvas ctx={ctx}>
       <div className="options-field">
-        {fieldConfig.presets &&
+        {finalFieldConfig.presets &&
           finalFieldConfig.settings?.presets?.display !== false && (
             <div className="options-field_presets">
-              {Object.entries(fieldConfig.presets).map(([presetId, preset]) =>
-                displayPreset(presetId, preset)
+              {Object.entries(finalFieldConfig.presets).map(
+                ([presetId, preset]) => displayPreset(presetId, preset)
               )}
             </div>
           )}
         <div
           className={`options-field_props ${finalFieldConfig.settings?.props?.display === false ? '-hidden' : ''}`}
         >
-          {fieldConfig.props &&
-            Object.entries(fieldConfig.props)
+          {finalFieldConfig.props &&
+            Object.entries(finalFieldConfig.props)
               .sort(([a], [b]) => a.localeCompare(b))
               .map(([propId, prop]) => {
                 // check if prop should be displayed

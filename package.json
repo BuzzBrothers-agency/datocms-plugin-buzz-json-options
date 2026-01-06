@@ -2,7 +2,7 @@
   "name": "@buzzbrothers/datocms-plugin-buzz-json-options",
   "description": "This plugin allows you to define some properties that will be editable either one by one, or by (visual) presets. You can also define which properties are available for editing.",
   "homepage": "https://github.com/BuzzBrothers-agency/datocms-plugin-buzz-json-options",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": "Buzzbrothers <tech@buzzbrothers.ch> (https://buzzbrothers.ch)",
   "type": "module",
   "keywords": [

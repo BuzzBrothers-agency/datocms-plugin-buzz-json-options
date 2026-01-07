@@ -35,6 +35,9 @@ export type TDatoPluginBuzzOptionsProp =
     }
 
 export type TDatoPluginBuzzOptionsSettings = {
+  debug?: {
+    togglePropsKey?: boolean
+  }
   presets?: {
     display?: boolean
     preview?: {

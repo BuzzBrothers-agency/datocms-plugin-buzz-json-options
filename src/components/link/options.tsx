@@ -55,9 +55,16 @@ export default function OptionsField({ ctx }) {
 
   // option state that store current selected options values
   const [options, setOptions] = useState(currentOptions)
+  const [debugDisplayProps, setDebugDisplayProps] = useState(false)
 
   // function to set all options values at once
   const setOptionsValues = (newOptions: TDatoPluginBuzzOptions) => {
+    // prevent update if values are the same
+    if (JSON.stringify(options) === JSON.stringify(newOptions)) {
+      return
+    }
+
+    // update state and form value
     setOptions({ ...newOptions })
     ctx.setFieldValue(ctx.fieldPath, JSON.stringify(newOptions))
   }
@@ -123,10 +130,23 @@ export default function OptionsField({ ctx }) {
   if (!isMounted.current) {
     // mark as mounted
     isMounted.current = true
+
     // set the default if needed
     setDefaults()
+
     // scroll to active preset
     scrollPresetIntoView()
+
+    // add keybinding to toggle props display (debug feature)
+    if (finalFieldConfig.settings?.debug?.togglePropsKey) {
+      window.addEventListener('keydown', (e) => {
+        if (e.metaKey && e.shiftKey && e.key === 'p') {
+          e.preventDefault()
+          e.stopPropagation()
+          setDebugDisplayProps((prev) => !prev)
+        }
+      })
+    }
   }
 
   // function to set a single option value
@@ -136,11 +156,11 @@ export default function OptionsField({ ctx }) {
       return
     }
 
-    // set then new value
-    options[optionId] = newValue
+    // create new options object
+    const newOptions = { ...options, [optionId]: newValue }
 
     // update state and form value
-    setOptionsValues(options)
+    setOptionsValues(newOptions)
   }
 
   // function to display a preset
@@ -206,7 +226,7 @@ export default function OptionsField({ ctx }) {
             </div>
           )}
         <div
-          className={`options-field_props ${finalFieldConfig.settings?.props?.display === false ? '-hidden' : ''}`}
+          className={`options-field_props ${finalFieldConfig.settings?.props?.display === false && !debugDisplayProps ? '-hidden' : ''}`}
         >
           {finalFieldConfig.props &&
             Object.entries(finalFieldConfig.props)

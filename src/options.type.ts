@@ -40,6 +40,7 @@ export type TDatoPluginBuzzOptionsSettings = {
   }
   presets?: {
     display?: boolean
+    excludeProps?: string[]
     preview?: {
       aspectRatio: number
       height: number

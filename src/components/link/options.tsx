@@ -96,9 +96,24 @@ export default function OptionsField({ ctx }) {
 
   // compare two objects sorted alphabetically
   const isSameObject = (obj1: any, obj2: any) => {
-    const serialitedObject1 = serializeValues(obj1)
-    const serialitedObject2 = serializeValues(obj2)
-    return serializeValues(obj1) == serializeValues(obj2)
+    const newObject1 = { ...obj1 }
+    const newObject2 = { ...obj2 }
+
+    const excludedProps = finalFieldConfig.settings?.presets?.excludeProps || []
+    excludedProps.forEach((propId: string) => {
+      delete newObject1[propId]
+    })
+
+    // remove properties in the second object that are not in the first object
+    for (const key in newObject2) {
+      if (!(key in newObject1)) {
+        delete newObject2[key]
+      }
+    }
+
+    const serialitedObject1 = serializeValues(newObject1)
+    const serialitedObject2 = serializeValues(newObject2)
+    return serializeValues(newObject1) == serializeValues(newObject2)
   }
 
   // serialize object keys alphabetically
@@ -171,6 +186,7 @@ export default function OptionsField({ ctx }) {
     const fileExtension = preset.preview?.split('.').pop()
     const isVideo =
       fileExtension && commonVideoFileExtensions().includes(fileExtension)
+    const isHtml = fileExtension === 'html' || fileExtension === 'htm'
 
     return (
       <div
@@ -183,7 +199,7 @@ export default function OptionsField({ ctx }) {
         }}
         key={presetId}
         onClick={(e: MouseEvent) => {
-          setOptionsValues(preset.values)
+          setOptionsValues({ ...options, ...preset.values })
           scrollPresetIntoView()
         }}
       >
@@ -204,6 +220,8 @@ export default function OptionsField({ ctx }) {
                   e.target.currentTime = 0
                 }}
               />
+            ) : isHtml ? (
+              <iframe src={preset.preview} title="preset preview" />
             ) : (
               <img src={preset.preview} alt="preset preview" />
             )}
@@ -234,6 +252,7 @@ export default function OptionsField({ ctx }) {
               .map(([propId, prop]) => {
                 // check if prop should be displayed
                 if (
+                  !debugDisplayProps &&
                   finalFieldConfig.settings?.props?.display &&
                   Array.isArray(finalFieldConfig.settings.props.display) &&
                   !finalFieldConfig.settings.props.display.includes(propId)

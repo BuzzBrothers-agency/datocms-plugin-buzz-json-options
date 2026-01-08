@@ -18,6 +18,7 @@ import {
   TDatoPluginBuzzOptionsConfig,
   TDatoPluginBuzzOptionsPreset
 } from '../../options.type'
+import Collapsible from '../ui/collapsible/collapsible'
 import './options.css'
 
 export default function OptionsField({ ctx }) {
@@ -221,7 +222,11 @@ export default function OptionsField({ ctx }) {
                 }}
               />
             ) : isHtml ? (
-              <iframe src={preset.preview} title="preset preview" />
+              <iframe
+                src={preset.preview}
+                title="preset preview"
+                scrolling="no"
+              />
             ) : (
               <img src={preset.preview} alt="preset preview" />
             )}
@@ -232,113 +237,122 @@ export default function OptionsField({ ctx }) {
     )
   }
 
+  console.log('F', finalFieldConfig)
+
   return (
     <Canvas ctx={ctx}>
-      <div className="options-field">
-        {finalFieldConfig.presets &&
-          finalFieldConfig.settings?.presets?.display !== false && (
-            <div className="options-field_presets">
-              {Object.entries(finalFieldConfig.presets).map(
-                ([presetId, preset]) => displayPreset(presetId, preset)
-              )}
-            </div>
-          )}
-        <div
-          className={`options-field_props ${finalFieldConfig.settings?.props?.display === false && !debugDisplayProps ? '-hidden' : ''}`}
-        >
-          {finalFieldConfig.props &&
-            Object.entries(finalFieldConfig.props)
-              .sort(([a], [b]) => a.localeCompare(b))
-              .map(([propId, prop]) => {
-                // check if prop should be displayed
-                if (
-                  !debugDisplayProps &&
-                  finalFieldConfig.settings?.props?.display &&
-                  Array.isArray(finalFieldConfig.settings.props.display) &&
-                  !finalFieldConfig.settings.props.display.includes(propId)
-                ) {
-                  return null
-                }
-
-                switch (true) {
-                  case 'select':
-                  case prop.options?.length > 0:
-                    return (
-                      <FieldGroup
-                        className={`options-field_prop -select -${prop.type}`}
-                        key={propId}
-                        label={propId}
-                      >
-                        <SelectField
-                          id={propId}
-                          name={propId}
-                          label={prop.label}
-                          // hint={prop.hint}
-                          value={getSelectOptionFromValue(
-                            prop,
-                            options[propId]
-                          )}
-                          selectInputProps={{
-                            options: prop.options.map((opt) => ({
-                              label: opt.label,
-                              value: opt.value
-                            }))
-                          }}
-                          onChange={(newValue) => {
-                            setOptionValue(propId, parse(newValue.value))
-                          }}
-                        />
-                      </FieldGroup>
-                    )
-                  case prop.type === 'string':
-                  case prop.type === 'number':
-                    return (
-                      <FieldGroup
-                        className={`options-field_prop -${prop.type}`}
-                        key={propId}
-                        label={propId}
-                      >
-                        <TextField
-                          id={propId}
-                          name={propId}
-                          // hint={prop.hint}
-                          type={prop.type === 'number' ? 'number' : 'text'}
-                          label={prop.label}
-                          value={options[propId] || prop.default || ''}
-                          textInputProps={{
-                            onBlur: (e) => {}
-                          }}
-                          onChange={(newValue) => {
-                            setOptionValue(propId, parse(newValue))
-                          }}
-                        />
-                      </FieldGroup>
-                    )
-                  case prop.type === 'boolean':
-                    return (
-                      <FieldGroup
-                        className={`options-field_prop -${prop.type}`}
-                        key={propId}
-                        label={propId}
-                      >
-                        <SwitchField
-                          id={propId}
-                          name={propId}
-                          label={prop.label}
-                          // hint={prop.hint}
-                          value={options[propId] ?? prop.default}
-                          onChange={(newValue) => {
-                            setOptionValue(propId, newValue)
-                          }}
-                        />
-                      </FieldGroup>
-                    )
-                  default:
+      <Collapsible
+        label={finalFieldConfig.settings?.panel?.label || 'Options'}
+        icon={finalFieldConfig.settings?.panel?.icon}
+        className="options-field_collapsible"
+        collapsed={finalFieldConfig.settings?.panel?.collapsed}
+      >
+        <div className="options-field">
+          {finalFieldConfig.presets &&
+            finalFieldConfig.settings?.presets?.display !== false && (
+              <div className="options-field_presets">
+                {Object.entries(finalFieldConfig.presets).map(
+                  ([presetId, preset]) => displayPreset(presetId, preset)
+                )}
+              </div>
+            )}
+          <div
+            className={`options-field_props ${finalFieldConfig.settings?.props?.display === false && !debugDisplayProps ? '-hidden' : ''}`}
+          >
+            {finalFieldConfig.props &&
+              Object.entries(finalFieldConfig.props)
+                .sort(([a], [b]) => a.localeCompare(b))
+                .map(([propId, prop]) => {
+                  // check if prop should be displayed
+                  if (
+                    !debugDisplayProps &&
+                    finalFieldConfig.settings?.props?.display &&
+                    Array.isArray(finalFieldConfig.settings.props.display) &&
+                    !finalFieldConfig.settings.props.display.includes(propId)
+                  ) {
                     return null
-                }
-              })}
+                  }
+
+                  switch (true) {
+                    case 'select':
+                    case prop.options?.length > 0:
+                      return (
+                        <FieldGroup
+                          className={`options-field_prop -select -${prop.type}`}
+                          key={propId}
+                          label={propId}
+                        >
+                          <SelectField
+                            id={propId}
+                            name={propId}
+                            label={prop.label}
+                            // hint={prop.hint}
+                            value={getSelectOptionFromValue(
+                              prop,
+                              options[propId]
+                            )}
+                            selectInputProps={{
+                              options: prop.options.map((opt) => ({
+                                label: opt.label,
+                                value: opt.value
+                              }))
+                            }}
+                            onChange={(newValue) => {
+                              setOptionValue(propId, parse(newValue.value))
+                            }}
+                          />
+                        </FieldGroup>
+                      )
+                    case prop.type === 'string':
+                    case prop.type === 'number':
+                      return (
+                        <FieldGroup
+                          className={`options-field_prop -${prop.type}`}
+                          key={propId}
+                          label={propId}
+                        >
+                          <TextField
+                            id={propId}
+                            name={propId}
+                            // hint={prop.hint}
+                            type={prop.type === 'number' ? 'number' : 'text'}
+                            label={prop.label}
+                            value={options[propId] || prop.default || ''}
+                            textInputProps={{
+                              onBlur: (e) => {}
+                            }}
+                            onChange={(newValue) => {
+                              setOptionValue(propId, parse(newValue))
+                            }}
+                          />
+                        </FieldGroup>
+                      )
+                    case prop.type === 'boolean':
+                      return (
+                        <FieldGroup
+                          className={`options-field_prop -${prop.type}`}
+                          key={propId}
+                          label={propId}
+                        >
+                          <SwitchField
+                            id={propId}
+                            name={propId}
+                            label={prop.label}
+                            // hint={prop.hint}
+                            value={options[propId] ?? prop.default}
+                            onChange={(newValue) => {
+                              setOptionValue(propId, newValue)
+                            }}
+                          />
+                        </FieldGroup>
+                      )
+                    default:
+                      return null
+                  }
+                })}
+          </div>
         </div>
-      </div>
+      </Collapsible>
     </Canvas>
   )
 }

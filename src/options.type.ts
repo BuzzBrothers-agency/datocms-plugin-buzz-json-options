@@ -49,4 +49,9 @@ export type TDatoPluginBuzzOptionsSettings = {
   props: {
     display?: boolean | string[]
   }
+  panel?: {
+    collapsed?: boolean
+    icon?: string
+    label?: string
+  }
 }

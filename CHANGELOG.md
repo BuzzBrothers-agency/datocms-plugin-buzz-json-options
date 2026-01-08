@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.0.7
+
+- Add a panel that wrap the options
+  - Can change the panel title, icon and default collapsed through the `settings.panel` options
+- Update display to match dato
+
 ## 0.0.6
 
 - Add the `presets.excludeProps` setting to tell the options that some properties are not handled by the presets

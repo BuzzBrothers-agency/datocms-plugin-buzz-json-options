@@ -179,6 +179,7 @@ export type TDatoPluginBuzzOptionsSettings = {
   }
   presets?: {
     display?: boolean
+    excludeProps?: string[]
     preview?: {
       aspectRatio: number
       height: number
@@ -186,6 +187,11 @@ export type TDatoPluginBuzzOptionsSettings = {
   }
   props: {
     display?: boolean | string[]
+  }
+  panel?: {
+    collapsed?: boolean
+    icon?: string
+    label?: string
   }
 }
 ```
